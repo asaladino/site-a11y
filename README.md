@@ -1,6 +1,6 @@
 # pa11y with Login
 
-Use pa11y with a login or without.
+Use [pa11y](https://github.com/pa11y/pa11y) with a login or without.
 
 ## Usage
 
