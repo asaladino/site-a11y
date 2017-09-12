@@ -1,0 +1,9 @@
+[
+  {
+    "name": "www.codingsimply.com",
+    "url": "https://www.codingsimply.com",
+    /* a fragment can be used to indentify when a login redirect occurred. example: %23done  */
+    /* note that # is encoded as %23 or the redirect won't work. */
+    "fragment": ""
+  }
+]

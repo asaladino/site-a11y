@@ -1,3 +1,9 @@
+config/*.json
+!config/options-sample.json
+!config/urls-sample.json
+
+reports/*.html
+
 # Logs
 logs
 *.log

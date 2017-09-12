@@ -1,0 +1,11 @@
+{
+  "wait": 6000,
+  "allowedStandards": [
+    "Section508"
+  ],
+  "ignore": [
+    "notice", "warning"
+  ],
+  "actions": [
+  ]
+}
