@@ -1,11 +1,17 @@
 {
   "wait": 6000,
-  "allowedStandards": [
-    "Section508"
-  ],
+  "standard": "WCAG2AA",
   "ignore": [
     "notice", "warning"
   ],
   "actions": [
-  ]
+  ],
+  "pa11yLoginOptions": {
+    /* Number of urls to check at a given time. */
+    "concurrency": 1,
+    /* What url do you want to start on? */
+    "startUrl": 0,
+    /* What url do you want to end on? */
+    "endUrl": 1
+  }
 }

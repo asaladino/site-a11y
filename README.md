@@ -8,21 +8,50 @@ Use [pa11y](https://github.com/pa11y/pa11y) with a login or without.
 
 Create a urls and options json file in config.
 
-Then set the variables in `index.js`
+Then create 2 json files in config with the convention:
+```
+options-test.json
+urls-test.json
+```
 
-```ecmascript 6
-// Number of urls to check at a given time.
-const concurrency = 1;
-// Corresponds to the config option and url files to use.
-const env = '-sample';
-// What url do you want to start on?
-const startUrl = 0;
-// How many urls do you want after the start url?
-const howManyUrls = 1;
+Where `test` can be any name that describes the environment. 
+
+The `options-test.json` file might look like:
+```
+{
+  "wait": 6000,
+  "standard": "WCAG2AA",
+  "ignore": [
+    "notice", "warning"
+  ],
+  "actions": [
+  ],
+  "pa11yLoginOptions": {
+    /* Number of urls to check at a given time. */
+    "concurrency": 1,
+    /* What url do you want to start on? */
+    "startUrl": 0,
+    /* What url do you want to end on? */
+    "endUrl": 1
+  }
+}
+```
+And `urls-test.json` might look like:
+
+```
+[
+  {
+    "name": "www.codingsimply.com",
+    "url": "https://www.codingsimply.com",
+    /* a fragment can be used to indentify when a login redirect occurred. example: %23done  */
+    /* note that # is encoded as %23 or the redirect won't work. */
+    "fragment": ""
+  }
+]
 ```
 
 Then run:
 
 ```
-node index.js
+node index.js -test
 ```
