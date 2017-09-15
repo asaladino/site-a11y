@@ -6,7 +6,7 @@
   ],
   "actions": [
   ],
-  "pa11yLoginOptions": {
+  "pa11yLogin": {
     /* Number of urls to check at a given time. */
     "concurrency": 1,
     /* What url do you want to start on? */

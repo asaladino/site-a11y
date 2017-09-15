@@ -2,7 +2,7 @@ config/*.json
 !config/options-sample.json
 !config/urls-sample.json
 
-reports/*.html
+reports/*/*.html
 
 # Logs
 logs

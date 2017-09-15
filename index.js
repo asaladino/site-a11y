@@ -1,44 +1,20 @@
-const pa11y = require('pa11y');
-const async = require('async');
-const htmlReporter = require('pa11y/reporter/html');
-const fs = require('fs');
+const ArgsRepository = require('./Repository/ArgsRepository');
+const OptionsRepository = require('./Repository/OptionsRepository');
+const UrlsRepository = require('./Repository/UrlsRepository');
+const Pa11yRepository = require('./Repository/Pa11yRepository');
 
-let args = process.argv.slice(2);
-let env = '';
-if (args.length > 0) {
-    env = args[0];
-}
+// Get the environment from the commandline args.
+let env = ArgsRepository.getEnvironment();
 
-const options = JSON.parse(fs.readFileSync('config/options' + env + '.json').toString());
-const urlTests = JSON.parse(fs.readFileSync('config/urls' + env + '.json').toString())
-    .slice(options.pa11yLoginOptions.startUrl, options.pa11yLoginOptions.endUrl);
+// Load the option.
+let optionsRepository = new OptionsRepository(env);
+let option = optionsRepository.getOption();
+let pa11yLogin = optionsRepository.getPa11yLogin();
 
-const test = pa11y(options);
+// Load the urls to test.
+let urlsRepository = new UrlsRepository(pa11yLogin, env);
+let urls = urlsRepository.findForRange();
 
-console.log("Queuing: " + urlTests.length);
-
-// noinspection JSUnresolvedFunction
-const q = async.queue(function (entry, callback) {
-    console.log("Testing: " + entry.url);
-    // noinspection JSUnresolvedFunction
-    test.run(entry.url + entry.fragment, function (error, results) {
-        const html = htmlReporter.process(results, entry.url);
-        fs.writeFile("reports/" + entry.name + '.html', html, function (err) {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log("Finished: ./reports/" + entry.name + " was saved!");
-            }
-            callback();
-        });
-    });
-}, options.pa11yLoginOptions.concurrency);
-
-// Add a function that is triggered when the queue
-// drains (it runs out of URLs to process)
-q.drain = function () {
-    console.log('All done!');
-};
-
-// Lastly, push the URLs we wish to test onto the queue
-q.push(urlTests);
+// Run tests.
+let pa11yRepository = new Pa11yRepository(option, env);
+pa11yRepository.test(urls);
