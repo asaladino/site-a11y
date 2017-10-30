@@ -32,30 +32,26 @@ class Pa11yRepository {
      */
     test(urls) {
         console.log("Queuing: " + urls.length);
-        let folder = './reports/' + this.env.substr(1) + '/';
-        if (!fs.existsSync(folder)) {
-            fs.mkdirSync(folder)
-        }
+        this.createFolder();
         // noinspection JSUnresolvedFunction
         const q = async.queue((entry, callback) => {
             console.log("Testing: " + entry.url);
             this.getPa11yTest().run(entry.url + entry.fragment, (error, results) => {
                 const html = htmlReporter.process(results, entry.url);
-                fs.writeFile(folder + entry.name + '.html', html, (err) => {
+                fs.writeFile(this.folder + entry.name + '.html', html, (err) => {
                     if (err) {
                         console.log(err);
                     } else {
-                        console.log('Finished: ' + folder + entry.name + '.html was saved!');
+                        console.log('Finished: ' + this.folder + entry.name + '.html was saved!');
                     }
-                    fs.writeFile(folder + entry.name + '.json', JSON.stringify(results), (err) => {
+                    fs.writeFile(this.folder + entry.name + '.json', JSON.stringify(results), (err) => {
                         if (err) {
                             console.log(err);
                         } else {
-                            console.log('Finished: ' + folder + entry.name + '.json was saved!');
+                            console.log('Finished: ' + this.folder + entry.name + '.json was saved!');
                         }
                         callback();
                     });
-
                 });
             });
         }, this.option.pa11yLogin.concurrency);
@@ -68,6 +64,31 @@ class Pa11yRepository {
 
         // Lastly, push the URLs we wish to test onto the queue
         q.push(urls);
+    }
+
+    /**
+     * Create project folder.
+     */
+    createFolder() {
+        this.folder = './reports/' + this.env.substr(1) + '/';
+        if (!fs.existsSync(this.folder)) {
+            fs.mkdirSync(this.folder)
+        }
+    }
+
+    /**
+     * Generates an index.json file for the test.
+     * @param urls {Array.<Url>}
+     */
+    index(urls) {
+        this.createFolder();
+        fs.writeFile(this.folder + 'index.json', JSON.stringify(urls), (err) => {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log(this.folder + 'index.json was created.');
+            }
+        });
     }
 }
 

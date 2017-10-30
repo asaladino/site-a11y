@@ -18,3 +18,4 @@ let urls = urlsRepository.findForRange();
 // Run tests.
 let pa11yRepository = new Pa11yRepository(option, env);
 pa11yRepository.test(urls);
+pa11yRepository.index(urls);
