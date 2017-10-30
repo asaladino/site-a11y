@@ -1,4 +1,4 @@
-config/*.json
+*.json
 !config/options-sample.json
 !config/urls-sample.json
 

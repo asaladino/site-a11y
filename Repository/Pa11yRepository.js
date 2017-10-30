@@ -47,7 +47,15 @@ class Pa11yRepository {
                     } else {
                         console.log('Finished: ' + folder + entry.name + '.html was saved!');
                     }
-                    callback();
+                    fs.writeFile(folder + entry.name + '.json', JSON.stringify(results), (err) => {
+                        if (err) {
+                            console.log(err);
+                        } else {
+                            console.log('Finished: ' + folder + entry.name + '.json was saved!');
+                        }
+                        callback();
+                    });
+
                 });
             });
         }, this.option.pa11yLogin.concurrency);
