@@ -32,7 +32,7 @@ class Pa11yRepository {
      */
     test(urls) {
         console.log("Queuing: " + urls.length);
-        let folder = './reports/' + this.env + '/';
+        let folder = './reports/' + this.env.substr(1) + '/';
         if (!fs.existsSync(folder)) {
             fs.mkdirSync(folder)
         }
