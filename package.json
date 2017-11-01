@@ -8,8 +8,9 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "pa11y": "^4.12.2",
     "async": "latest",
+    "chalk": "^2.3.0",
+    "pa11y": "^4.12.2",
     "truffler": "latest"
   }
 }

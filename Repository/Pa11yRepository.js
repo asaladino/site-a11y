@@ -6,6 +6,7 @@ const fs = require('fs');
 const Option = require('../Model/Option');
 // noinspection JSUnusedLocalSymbols
 const Truffler = require('truffler');
+const chalk = require('chalk');
 
 class Pa11yRepository {
     /**
@@ -31,31 +32,36 @@ class Pa11yRepository {
      * @param urlsToGet {Array.<Url>}
      */
     test(urlsToGet) {
+        console.log('\x1Bc');
         this.createFolder();
         let urls = urlsToGet.filter(url => {
             return !fs.existsSync(this.folder + url.name + '.html');
         });
-        console.log("Queuing: " + urls.length);
-        var completed = 0;
+
+        let completed = 0;
         // noinspection JSUnresolvedFunction
         const q = async.queue((entry, callback) => {
-            console.log("Complete: " + completed + " of " + urls.length + " | " + ((completed/urls.length) * 100).toFixed(2) + "%");
-            console.log("Testing: " + entry.url);
+            if(completed % 3 === 0) {
+                process.stdout.write('\x1Bc');
+            }
+            console.log(chalk.blue("Completed: " + completed + " of " + urls.length + " | " + ((completed/urls.length) * 100).toFixed(2) + "%"));
+            console.log(chalk.yellow("Testing: " + chalk.underline.bold(entry.url)));
             this.getPa11yTest().run(entry.url + entry.fragment, (error, results) => {
                 const html = htmlReporter.process(results, entry.url);
                 fs.writeFile(this.folder + entry.name + '.html', html, (err) => {
                     if (err) {
-                        console.log(err);
+                        console.log(chalk.red(err));
                     } else {
-                        console.log('Finished: ' + this.folder + entry.name + '.html was saved!');
+                        console.log(chalk.green('Finished: ' + this.folder + entry.name + '.html was saved!'));
                     }
                     fs.writeFile(this.folder + entry.name + '.json', JSON.stringify(results), (err) => {
                         if (err) {
-                            console.log(err);
+                            console.log(chalk.red(err));
                         } else {
-                            console.log('Finished: ' + this.folder + entry.name + '.json was saved!');
+                            console.log(chalk.green('Finished: ' + this.folder + entry.name + '.json was saved!'));
                         }
                         completed++;
+                        console.log('');
                         callback();
                     });
                 });
