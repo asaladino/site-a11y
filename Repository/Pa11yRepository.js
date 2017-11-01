@@ -33,8 +33,10 @@ class Pa11yRepository {
     test(urls) {
         console.log("Queuing: " + urls.length);
         this.createFolder();
+        var completed = 0;
         // noinspection JSUnresolvedFunction
         const q = async.queue((entry, callback) => {
+            console.log("Complete: " + completed + " of " + urls.length + " | " + (completed/urls.length).toFixed(2) + "%");
             console.log("Testing: " + entry.url);
             this.getPa11yTest().run(entry.url + entry.fragment, (error, results) => {
                 const html = htmlReporter.process(results, entry.url);
@@ -50,6 +52,7 @@ class Pa11yRepository {
                         } else {
                             console.log('Finished: ' + this.folder + entry.name + '.json was saved!');
                         }
+                        completed++;
                         callback();
                     });
                 });
