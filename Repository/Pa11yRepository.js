@@ -28,15 +28,18 @@ class Pa11yRepository {
 
     /**
      * Test a bunch of urls.
-     * @param urls {Array.<Url>}
+     * @param urlsToGet {Array.<Url>}
      */
-    test(urls) {
-        console.log("Queuing: " + urls.length);
+    test(urlsToGet) {
         this.createFolder();
+        let urls = urlsToGet.filter(url => {
+            return !fs.existsSync(this.folder + url.name + '.html');
+        });
+        console.log("Queuing: " + urls.length);
         var completed = 0;
         // noinspection JSUnresolvedFunction
         const q = async.queue((entry, callback) => {
-            console.log("Complete: " + completed + " of " + urls.length + " | " + (completed/urls.length).toFixed(2) + "%");
+            console.log("Complete: " + completed + " of " + urls.length + " | " + ((completed/urls.length) * 100).toFixed(2) + "%");
             console.log("Testing: " + entry.url);
             this.getPa11yTest().run(entry.url + entry.fragment, (error, results) => {
                 const html = htmlReporter.process(results, entry.url);
