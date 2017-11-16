@@ -41,10 +41,7 @@ class Pa11yRepository {
         let completed = 0;
         // noinspection JSUnresolvedFunction
         const q = async.queue((entry, callback) => {
-            if(completed % 3 === 0) {
-                process.stdout.write('\x1Bc');
-            }
-            console.log(chalk.blue("Completed: " + completed + " of " + urls.length + " | " + ((completed/urls.length) * 100).toFixed(2) + "%"));
+            console.log(chalk.blue("Completed: " + completed + " of " + urls.length + " | " + ((completed / urls.length) * 100).toFixed(2) + "%"));
             console.log(chalk.yellow("Testing: " + chalk.underline.bold(entry.url)));
             this.getPa11yTest().run(entry.url + entry.fragment, (error, results) => {
                 const html = htmlReporter.process(results, entry.url);
@@ -73,7 +70,6 @@ class Pa11yRepository {
         q.drain = function () {
             console.log('All done!');
         };
-
         // Lastly, push the URLs we wish to test onto the queue
         q.push(urls);
     }
