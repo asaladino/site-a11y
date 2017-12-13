@@ -12,9 +12,16 @@ class OptionsRepository {
     /**
      * @returns {Option}
      */
-    getOption() {
+    getOption(settings = {}) {
         if (!this.option) {
             this.option = JSON.parse(fs.readFileSync('./config/options' + this.env + '.json').toString());
+        }
+        if (settings.debug) {
+            this.option.log = {
+                debug: console.log.bind(console),
+                error: console.error.bind(console),
+                info: console.info.bind(console)
+            };
         }
         return this.option;
     }

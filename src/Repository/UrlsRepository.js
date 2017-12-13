@@ -20,7 +20,10 @@ class UrlsRepository {
      */
     findForRange() {
         return JSON.parse(fs.readFileSync('./config/urls' + this.env + '.json').toString())
-            .slice(this.pa11yLogin.startUrl, this.pa11yLogin.endUrl);
+            .slice(this.pa11yLogin.startUrl, this.pa11yLogin.endUrl)
+            .map(entry =>{
+                return new Url(entry.name, entry.url, entry.fragment);
+            });
     }
 }
 

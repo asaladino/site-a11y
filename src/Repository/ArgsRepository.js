@@ -11,7 +11,6 @@ class ArgsRepository {
         }
         return '';
     }
-
 }
 
 module.exports = ArgsRepository;
