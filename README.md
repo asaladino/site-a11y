@@ -1,6 +1,7 @@
-# pa11y with Login
+# Site A11y
 
-Use [pa11y](https://github.com/pa11y/pa11y) with a login or without.
+Use [pa11y](https://github.com/pa11y/pa11y) with a login or without. This app works in conjunction
+with [site-index](https://github.com/asaladino/site-index).
 
 ## Usage
 
