@@ -2,9 +2,7 @@ const pa11y = require('pa11y');
 const htmlReporter = require('pa11y-reporter-html');
 const fs = require('fs');
 const path = require("path");
-// noinspection JSUnusedLocalSymbols
 const Option = require('../Model/Option');
-// noinspection JSUnusedLocalSymbols
 const chalk = require('chalk');
 
 class Pa11yRepository {
@@ -45,7 +43,7 @@ class Pa11yRepository {
         for (let url of urls) {
             this.currentUrl = url;
             const finalUrl = url.url + url.fragment;
-            const results = await pa11y(finalUrl, this.option);
+            const results = await pa11y(finalUrl, this.option.a11y);
             const html = await htmlReporter.results(results);
 
             const htmlFile = path.join(this.folder, url.name + '.html');

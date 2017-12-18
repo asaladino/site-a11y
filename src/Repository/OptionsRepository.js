@@ -1,11 +1,8 @@
 const fs = require('fs');
 const path = require("path");
 
-// noinspection JSUnusedLocalSymbols
 const Option = require('../Model/Option');
 const Args = require('../Model/Args');
-// noinspection JSUnusedLocalSymbols
-const Pa11yLogin = require('../Model/Pa11yLogin');
 
 class OptionsRepository {
 
@@ -22,17 +19,9 @@ class OptionsRepository {
     getOption() {
         if (!this.option) {
             let optionsFile = path.join(this.args.output.filename, 'options', this.args.getSiteName() + '.json');
-            this.option = JSON.parse(fs.readFileSync(optionsFile).toString());
+            this.option = new Option(JSON.parse(fs.readFileSync(optionsFile).toString()));
         }
-        return new Option(this.option);
-    }
-
-    /**
-     *
-     * @returns {Pa11yLogin}
-     */
-    getPa11yLogin() {
-        return this.getOption().pa11yLogin;
+        return this.option;
     }
 
 }
