@@ -8,10 +8,13 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "ascii-progress": "^1.0.5",
     "async": "latest",
     "chalk": "^2.3.0",
+    "command-line-args": "^4.0.7",
+    "command-line-usage": "^4.0.2",
     "pa11y": "5.0.0-beta.4",
-    "truffler": "latest",
-    "pa11y-reporter-html": "^1.0.0"
+    "pa11y-reporter-html": "^1.0.0",
+    "truffler": "latest"
   }
 }

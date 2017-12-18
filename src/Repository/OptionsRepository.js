@@ -1,29 +1,30 @@
 const fs = require('fs');
+const path = require("path");
+
 // noinspection JSUnusedLocalSymbols
 const Option = require('../Model/Option');
+const Args = require('../Model/Args');
 // noinspection JSUnusedLocalSymbols
 const Pa11yLogin = require('../Model/Pa11yLogin');
 
 class OptionsRepository {
-    constructor(env) {
-        this.env = env;
+
+    /**
+     * @param {Args} args
+     */
+    constructor(args) {
+        this.args = args;
     }
 
     /**
      * @returns {Option}
      */
-    getOption(settings = {}) {
+    getOption() {
         if (!this.option) {
-            this.option = JSON.parse(fs.readFileSync('./config/options' + this.env + '.json').toString());
+            let optionsFile = path.join(this.args.output.filename, 'options', this.args.getSiteName() + '.json');
+            this.option = JSON.parse(fs.readFileSync(optionsFile).toString());
         }
-        if (settings.debug) {
-            this.option.log = {
-                debug: console.log.bind(console),
-                error: console.error.bind(console),
-                info: console.info.bind(console)
-            };
-        }
-        return this.option;
+        return new Option(this.option);
     }
 
     /**

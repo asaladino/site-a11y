@@ -3,15 +3,18 @@ const fs = require('fs');
 const Pa11yLogin = require('../Model/Pa11yLogin');
 // noinspection JSUnusedLocalSymbols
 const Url = require('../Model/Url');
+const Args = require('../Model/Args');
+const Option = require('../Model/Option');
+const path = require("path");
 
 class UrlsRepository {
     /**
-     * @param pa11yLogin {Pa11yLogin}
-     * @param env {string}
+     * @param option {Option}
+     * @param args {Args}
      */
-    constructor(pa11yLogin, env) {
-        this.pa11yLogin = pa11yLogin;
-        this.env = env;
+    constructor(option, args) {
+        this.option = option;
+        this.args = args;
     }
 
     /**
@@ -19,9 +22,10 @@ class UrlsRepository {
      * @returns {Array.<Url>|string|Buffer|Blob|ArrayBuffer}
      */
     findForRange() {
-        return JSON.parse(fs.readFileSync('./config/urls' + this.env + '.json').toString())
-            .slice(this.pa11yLogin.startUrl, this.pa11yLogin.endUrl)
-            .map(entry =>{
+        let urlsFile = path.join(this.args.output.filename, this.args.getSiteName(), 'urls', 'urls.json');
+        return JSON.parse(fs.readFileSync(urlsFile).toString())
+            .slice(this.option.pa11yLogin.startUrl, this.option.pa11yLogin.endUrl)
+            .map(entry => {
                 return new Url(entry.name, entry.url, entry.fragment);
             });
     }

@@ -1,6 +1,6 @@
 class Option {
-    constructor(pa11yLogin) {
-        this.pa11yLogin = pa11yLogin;
+    constructor(option) {
+        Object.assign(this, option);
     }
 }
 

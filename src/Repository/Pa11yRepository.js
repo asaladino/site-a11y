@@ -1,20 +1,20 @@
 const pa11y = require('pa11y');
 const htmlReporter = require('pa11y-reporter-html');
 const fs = require('fs');
+const path = require("path");
 // noinspection JSUnusedLocalSymbols
 const Option = require('../Model/Option');
 // noinspection JSUnusedLocalSymbols
-const Truffler = require('truffler');
 const chalk = require('chalk');
 
 class Pa11yRepository {
     /**
      * @param option {Option}
-     * @param env {string}
+     * @param args {Args}
      */
-    constructor(option, env) {
+    constructor(option, args) {
         this.option = option;
-        this.env = env;
+        this.args = args;
         /**
          * @type {Url}
          */
@@ -24,14 +24,16 @@ class Pa11yRepository {
     /**
      * Test a bunch of urls.
      * @param urlsToGet {Array.<Url>}
+     * @param started {function}
+     * @param updated  {function}
      */
-    async test(urlsToGet) {
+    async test(urlsToGet, started = (found) => {
+    }, updated = (delta, tokens) => {
+    }) {
         this.createFolder();
-
         let completed = 0;
-
         let urls = urlsToGet.filter(url => {
-            return !fs.existsSync(this.folder + url.name + '.html');
+            return !fs.existsSync(path.join(this.folder, url.name + '.json'));
         }).filter(url => {
             return !url.url.endsWith('.pdf')
         }).filter(url => {
@@ -39,33 +41,33 @@ class Pa11yRepository {
         });
 
         let total = urls.length;
+        started(total);
         for (let url of urls) {
             this.currentUrl = url;
-            console.log('');
-            console.log(chalk.blue("Completed: " + completed + " of " + total + " | " + ((completed / total) * 100).toFixed(2) + "%"));
-            console.log(chalk.yellow("Testing: " + chalk.underline.bold(url.url)));
             const finalUrl = url.url + url.fragment;
-
             const results = await pa11y(finalUrl, this.option);
             const html = await htmlReporter.results(results);
 
-            await fs.writeFile(this.folder + url.name + '.html', html, (err) => {
+            const htmlFile = path.join(this.folder, url.name + '.html');
+            await fs.writeFile(htmlFile, html, (err) => {
                 if (err) {
-                    console.log(chalk.red(err));
+                    updated(0, {message: chalk.red(err)});
                 } else {
-                    console.log(chalk.green('Finished: ' + this.folder + url.name + '.html was saved!'));
+                    updated(0, {message: chalk.green(url.name + '.html')});
                 }
             });
 
-            await fs.writeFile(this.folder + url.name + '.json', JSON.stringify(results), (err) => {
+            const jsonFile = path.join(this.folder, url.name + '.json');
+            await fs.writeFile(jsonFile, JSON.stringify(results), (err) => {
                 if (err) {
-                    console.log(chalk.red(err));
+                    updated(0, {message: chalk.red(err)});
                 } else {
-                    console.log(chalk.green('Finished: ' + this.folder + url.name + '.json was saved!'));
+                    updated(0, {message: chalk.green(url.name + '.json')});
                 }
             });
             url.tested = true;
             completed++;
+            updated(1, {message: finalUrl});
         }
     }
 
@@ -73,25 +75,10 @@ class Pa11yRepository {
      * Create project folder.
      */
     createFolder() {
-        this.folder = './reports/' + this.env.substr(1) + '/';
+        this.folder = path.join(this.args.output.filename, this.args.getSiteName(), 'a11y');
         if (!fs.existsSync(this.folder)) {
             fs.mkdirSync(this.folder)
         }
-    }
-
-    /**
-     * Generates an index.json file for the test.
-     * @param urls {Array.<Url>}
-     */
-    index(urls) {
-        this.createFolder();
-        fs.writeFile(this.folder + 'index.json', JSON.stringify(urls), (err) => {
-            if (err) {
-                console.log(err);
-            } else {
-                console.log(this.folder + 'index.json was created.');
-            }
-        });
     }
 }
 
