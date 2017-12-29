@@ -1,11 +1,11 @@
 {
-  "name": "pa11y-login",
+  "name": "site-a11y",
   "version": "0.0.1",
-  "main": "index.js",
+  "main": "site-a11y",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "Adam Saladino<adam@codingsimply.com>",
   "license": "MIT",
   "dependencies": {
     "ascii-progress": "^1.0.5",
