@@ -25,9 +25,7 @@ class Pa11yRepository {
      * @param started {function}
      * @param updated  {function}
      */
-    async test(urlsToGet, started = (found) => {
-    }, updated = (delta, tokens) => {
-    }) {
+    async test(urlsToGet, started = (found) => {}, updated = (delta, tokens) => {}) {
         this.createFolder();
         let completed = 0;
         let urls = urlsToGet.filter(url => {
