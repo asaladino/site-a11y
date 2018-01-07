@@ -31,8 +31,8 @@ if (args.shouldShowHelp()) {
     test();
     function test() {
         let bar;
+        console.log('\nStarting A11y Tests\n');
         pa11yRepository.test(urls, (count) => {
-            console.log('Starting A11y Tests\n');
             bar = ProgressUtility.build(count);
         }, (delta, tokens) =>{
             bar.tick(delta, tokens);
