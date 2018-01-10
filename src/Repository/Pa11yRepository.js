@@ -3,7 +3,6 @@ const htmlReporter = require('pa11y-reporter-html');
 const fs = require('fs');
 const path = require("path");
 const Option = require('../Model/Option');
-const chalk = require('chalk');
 
 class Pa11yRepository {
     /**
@@ -47,18 +46,18 @@ class Pa11yRepository {
             const htmlFile = path.join(this.folder, url.name + '.html');
             await fs.writeFile(htmlFile, html, (err) => {
                 if (err) {
-                    updated(0, {message: chalk.red(err)});
+                    updated(0, {message: err});
                 } else {
-                    updated(0, {message: chalk.green(url.name + '.html')});
+                    updated(0, {message: url.name + '.html'});
                 }
             });
 
             const jsonFile = path.join(this.folder, url.name + '.json');
             await fs.writeFile(jsonFile, JSON.stringify(results), (err) => {
                 if (err) {
-                    updated(0, {message: chalk.red(err)});
+                    updated(0, {message: err});
                 } else {
-                    updated(0, {message: chalk.green(url.name + '.json')});
+                    updated(0, {message: url.name + '.json'});
                 }
             });
             url.tested = true;
