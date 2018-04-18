@@ -31,7 +31,7 @@ if (args.shouldShowHelp()) {
     test();
     function test() {
         let bar;
-        console.log('\nStarting A11y Tests\n');
+        console.log('\nStarting A11y Tests');
         pa11yRepository.test(urls, (count) => {
             bar = ProgressUtility.build(count);
         }, (delta, tokens) =>{
@@ -40,8 +40,7 @@ if (args.shouldShowHelp()) {
             console.log('\nA11y Tests Complete');
         }).catch(exception => {
             pa11yRepository.currentUrl.addError();
-            console.log('!!!!!Exception!!!!');
-            console.log(exception);
+            bar.tick(0, '!!!!!Exception!!!!');
             test();
         });
     }

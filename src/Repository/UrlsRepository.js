@@ -20,8 +20,18 @@ class UrlsRepository {
      */
     findForRange() {
         let urlsFile = path.join(this.args.output.filename, this.args.getSiteName(), 'urls', 'urls.json');
+        let startUrl = 0;
+        let endUrl = -1;
+        if(this.option.hasOwnProperty('a11y') && this.option.a11y.hasOwnProperty('pa11yLogin')) {
+            if(this.option.a11y.pa11yLogin.hasOwnProperty('startUrl')) {
+                startUrl = this.option.a11y.pa11yLogin.startUrl;
+            }
+            if(this.option.a11y.pa11yLogin.hasOwnProperty('endUrl')) {
+                endUrl = this.option.a11y.pa11yLogin.endUrl;
+            }
+        }
         return JSON.parse(fs.readFileSync(urlsFile).toString())
-            .slice(this.option.a11y.pa11yLogin.startUrl, this.option.a11y.pa11yLogin.endUrl)
+            .slice(startUrl, endUrl)
             .map(entry => {
                 return new Url(entry.name, entry.url, entry.fragment);
             });
