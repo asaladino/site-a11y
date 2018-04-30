@@ -1,5 +1,4 @@
 const pa11y = require('pa11y');
-const htmlReporter = require('pa11y-reporter-html');
 const fs = require('fs');
 const path = require("path");
 const Option = require('../Model/Option');
@@ -38,8 +37,8 @@ class Pa11yRepository {
         let total = urls.length;
         started(total);
         for (let url of urls) {
-            const finalUrl = url.url + url.fragment;
-            const results = await pa11y(finalUrl, this.option.a11y);
+            this.currentUrl = url.url + url.fragment;
+            const results = await pa11y(this.currentUrl, this.option.a11y);
 
             const jsonFile = path.join(this.folder, url.name + '.json');
             await fs.writeFile(jsonFile, JSON.stringify(results), (err) => {
@@ -53,19 +52,6 @@ class Pa11yRepository {
             completed++;
             updated(1, {message: finalUrl});
         }
-    }
-
-    async reportHtml(updated = (delta, tokens) => {}) {
-        const html = await htmlReporter.results(results);
-
-        const htmlFile = path.join(this.folder, url.name + '.html');
-        await fs.writeFile(htmlFile, html, (err) => {
-            if (err) {
-                updated(0, {message: err});
-            } else {
-                updated(0, {message: url.name + '.html'});
-            }
-        });
     }
 
     /**

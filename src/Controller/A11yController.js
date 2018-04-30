@@ -24,11 +24,14 @@ class A11yController {
             let pa11yRepository = new Pa11yRepository(option, this.args);
 
             test();
+
             function test() {
                 let bar;
                 pa11yRepository.test(urls, (count) => {
-                    bar = ProgressUtility.build(count);
-                }, (delta, tokens) =>{
+                    if (count > 0) {
+                        bar = ProgressUtility.build(count);
+                    }
+                }, (delta, tokens) => {
                     bar.tick(delta, tokens);
                 }).then(() => {
                     console.log('\nDone');
