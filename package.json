@@ -1,6 +1,6 @@
 {
   "name": "site-a11y",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Uses pa11y with a login or without. This app works in conjunction with site-index.",
   "main": "site-a11y",
   "scripts": {
@@ -12,7 +12,7 @@
     "ascii-progress": "^1.0.5",
     "command-line-args": "^4.0.7",
     "command-line-usage": "^4.0.2",
-    "pa11y": "5.0.0-beta.4",
+    "pa11y": "5.0.3",
     "pa11y-reporter-html": "^1.0.0",
     "truffler": "latest"
   }

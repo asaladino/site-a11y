@@ -29,16 +29,22 @@ class A11yController {
                 let bar;
                 pa11yRepository.test(urls, (count) => {
                     if (count > 0) {
-                        bar = ProgressUtility.build(count);
+                        if(pa11yRepository.args.verbose) {
+                            bar = ProgressUtility.build(count);
+                        }
                     }
                 }, (delta, tokens) => {
-                    bar.tick(delta, tokens);
+                    if(pa11yRepository.args.verbose) {
+                        bar.tick(delta, tokens);
+                    }
                 }).then(() => {
                     console.log('\nDone');
                     resolve();
                 }).catch(exception => {
                     pa11yRepository.currentUrl.addError();
-                    bar.tick(0, '!!!!!Exception!!!!');
+                    if(pa11yRepository.args.verbose) {
+                        bar.tick(0, '!!!!!Exception!!!!');
+                    }
                     test();
                 });
             }

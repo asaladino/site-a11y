@@ -9,6 +9,9 @@ class Pa11yRepository {
      * @param args {Args}
      */
     constructor(option, args) {
+        /**
+         * @type {Option}
+         */
         this.option = option;
         this.args = args;
         /**
@@ -37,8 +40,8 @@ class Pa11yRepository {
         let total = urls.length;
         started(total);
         for (let url of urls) {
-            this.currentUrl = url.url + url.fragment;
-            const results = await pa11y(this.currentUrl, this.option.a11y);
+            this.currentUrl = url;
+            const results = await pa11y(url.url + url.fragment, this.option.a11y);
 
             const jsonFile = path.join(this.folder, url.name + '.json');
             await fs.writeFile(jsonFile, JSON.stringify(results), (err) => {
@@ -50,7 +53,7 @@ class Pa11yRepository {
             });
             url.tested = true;
             completed++;
-            updated(1, {message: finalUrl});
+            updated(1, {message: url.name + '.json'});
         }
     }
 

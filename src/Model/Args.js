@@ -7,9 +7,12 @@ class Args {
          */
         this.output = null;
         /**
-         * @type {string}
+         * @type {string|*}
          */
         this.domain = null;
+
+        this.verbose = false;
+
         Object.assign(this, params);
     }
 
