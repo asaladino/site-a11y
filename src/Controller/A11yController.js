@@ -2,11 +2,10 @@ const OptionsRepository = require('../Repository/OptionsRepository');
 const UrlsRepository = require('../Repository/UrlsRepository');
 const Pa11yRepository = require('../Repository/Pa11yRepository');
 
-const ProgressUtility = require('../Utility/ProgressUtility');
-
 class A11yController {
     constructor(args) {
         this.args = args;
+        this.logger = new (require('../Utility/Logger'))(args);
     }
 
     start() {
@@ -18,36 +17,36 @@ class A11yController {
 
             // Load the urls to test.
             let urlsRepository = new UrlsRepository(option, this.args);
-            let urls = urlsRepository.findForRange();
+            this.urls = urlsRepository.findForRange();
 
             // Run tests.
-            let pa11yRepository = new Pa11yRepository(option, this.args);
+            this.pa11yRepository = new Pa11yRepository(option, this.args);
 
-            test();
+            this.test(resolve);
+        });
+    }
 
-            function test() {
-                let bar;
-                pa11yRepository.test(urls, (count) => {
-                    if (count > 0) {
-                        if(pa11yRepository.args.verbose) {
-                            bar = ProgressUtility.build(count);
-                        }
-                    }
-                }, (delta, tokens) => {
-                    if(pa11yRepository.args.verbose) {
-                        bar.tick(delta, tokens);
-                    }
-                }).then(() => {
-                    console.log('\nDone');
-                    resolve();
-                }).catch(exception => {
-                    pa11yRepository.currentUrl.addError();
-                    if(pa11yRepository.args.verbose) {
-                        bar.tick(0, '!!!!!Exception!!!!');
-                    }
-                    test();
-                });
+    test(resolve) {
+        this.pa11yRepository.test(this.urls, progress => {
+            this.logger.report(progress.toLog());
+            if (this.args.verbose) {
+                console.log(progress.toString());
             }
+        }, progress => {
+            if (this.args.verbose) {
+                console.log(progress.toString());
+            }
+        }).then(progress => {
+            this.logger.report(progress.toLog());
+            console.log(progress.toString());
+            resolve();
+        }).catch(exception => {
+            this.pa11yRepository.currentUrl.addError();
+            this.logger.report(exception);
+            if (this.args.verbose) {
+                console.log('!!!!!Exception!!!!');
+            }
+            this.test(resolve);
         });
     }
 }

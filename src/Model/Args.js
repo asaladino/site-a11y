@@ -1,4 +1,6 @@
 const FileDetails = require('./FileDetails');
+const path = require('path');
+const fs = require('fs');
 
 class Args {
     constructor(params) {
@@ -22,6 +24,19 @@ class Args {
 
     getSiteName() {
         return this.domain.replace(/[.]/g, '_');
+    }
+
+    /**
+     * Get the project folder which the output + the site name. Also, it will be created if it doesn't exist.
+     * @returns {string} the project path.
+     */
+    getProjectPath() {
+        let siteName = this.getSiteName();
+        let projectPath = path.join(this.output.filename, siteName);
+        if (!fs.existsSync(projectPath)) {
+            fs.mkdirSync(projectPath);
+        }
+        return projectPath;
     }
 }
 
