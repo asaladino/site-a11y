@@ -27,6 +27,12 @@ module.exports = [
                 description: 'Output information on the reporting.'
             },
             {
+                name: 'remote',
+                defaultValue: false,
+                type: Boolean,
+                description: 'Use url from index else html from index will be used.'
+            },
+            {
                 name: 'help',
                 type: Boolean,
                 description: 'Print this usage guide.'

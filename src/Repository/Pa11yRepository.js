@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require("path");
 const Option = require('../Model/Option');
 const Progress = require('../Model/Progress');
+const HtmlRepository = require('../Repository/HtmlRepository');
 
 class Pa11yRepository {
     /**
@@ -30,6 +31,7 @@ class Pa11yRepository {
      */
     async test(urlsToGet, started = (progress) => {}, updated = (progress) => {}) {
         this.createFolder();
+        let htmlRepository = new HtmlRepository(this.args.getProjectPath());
         let urls = urlsToGet.filter(url => {
             return !fs.existsSync(path.join(this.folder, url.name + '.json'));
         }).filter(url => {
@@ -41,9 +43,13 @@ class Pa11yRepository {
         let progress = new Progress(null, urls.length);
         started(progress);
         for (let url of urls) {
+            let scanLocation = htmlRepository.file(url);
+            if(this.args.remote) {
+                scanLocation = url.url + url.fragment;
+            }
             // noinspection JSUnusedGlobalSymbols
             this.currentUrl = url;
-            const results = await pa11y(url.url + url.fragment, this.option.a11y);
+            const results = await pa11y(scanLocation, this.option.a11y);
             const jsonFile = path.join(this.folder, url.name + '.json');
             await fs.writeFile(jsonFile, JSON.stringify(results), (err) => {});
             url.tested = true;
