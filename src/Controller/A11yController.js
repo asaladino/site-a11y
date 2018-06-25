@@ -17,7 +17,7 @@ class A11yController {
 
             // Load the urls to test.
             let urlsRepository = new UrlsRepository(option, this.args);
-            this.urls = urlsRepository.findForRange();
+            this.urls = urlsRepository.findAll();
 
             // Run tests.
             this.pa11yRepository = new Pa11yRepository(option, this.args);
@@ -33,6 +33,7 @@ class A11yController {
                 console.log(progress.toString());
             }
         }, progress => {
+            this.logger.report(progress.toLog());
             if (this.args.verbose) {
                 console.log(progress.toString());
             }

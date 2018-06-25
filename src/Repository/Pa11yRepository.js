@@ -56,7 +56,7 @@ class Pa11yRepository {
             progress.update(url);
             updated(progress);
         }
-        return progress;
+        return new Progress(null, urls.length);
     }
 
     /**

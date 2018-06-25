@@ -36,6 +36,19 @@ class UrlsRepository {
                 return new Url(entry.name, entry.url, entry.fragment);
             });
     }
+
+
+    /**
+     * Find urls for range specified in the Pa11yLogin
+     * @returns {[Url]}
+     */
+    findAll() {
+        let urlsFile = path.join(this.args.output.filename, this.args.getSiteName(), 'urls', 'urls.json');
+        return JSON.parse(fs.readFileSync(urlsFile).toString())
+            .map(entry => {
+                return new Url(entry.name, entry.url, entry.fragment);
+            });
+    }
 }
 
 module.exports = UrlsRepository;

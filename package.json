@@ -1,6 +1,6 @@
 {
   "name": "site-a11y",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Uses pa11y with a login or without. This app works in conjunction with site-index.",
   "main": "site-a11y",
   "scripts": {
