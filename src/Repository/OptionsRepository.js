@@ -1,29 +1,23 @@
-const fs = require('fs');
-const path = require("path");
+// @flow
+import fs from "fs";
+import path from "path";
+import Option from "../Model/Option";
+import Args from "../Model/Args";
 
-const Option = require('../Model/Option');
-const Args = require('../Model/Args');
+export default class OptionsRepository {
 
-class OptionsRepository {
+    args: Args;
+    option: ?Option;
 
-    /**
-     * @param {Args} args
-     */
-    constructor(args) {
+    constructor(args: Args) {
         this.args = args;
     }
 
-    /**
-     * @returns {Option}
-     */
-    getOption() {
+    getOption(): Option {
         if (!this.option) {
             let optionsFile = path.join(this.args.output.filename, 'options', this.args.getSiteName() + '.json');
             this.option = new Option(JSON.parse(fs.readFileSync(optionsFile).toString()));
         }
         return this.option;
     }
-
 }
-
-module.exports = OptionsRepository;

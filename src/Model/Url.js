@@ -1,5 +1,13 @@
-class Url {
-    constructor(name, url, fragment) {
+// @flow
+
+export default class Url {
+    name: string;
+    url: string;
+    fragment: string;
+    errorCount: number;
+    tested: boolean;
+
+    constructor(name: string, url: string, fragment: string) {
         this.name = name;
         this.url = url;
         this.fragment = fragment;
@@ -12,4 +20,3 @@ class Url {
     }
 }
 
-module.exports = Url;

@@ -1,35 +1,28 @@
-const pa11y = require('pa11y');
-const fs = require('fs');
-const path = require("path");
-const Option = require('../Model/Option');
-const Progress = require('../Model/Progress');
-const HtmlRepository = require('../Repository/HtmlRepository');
+// @flow
+import pa11y from "pa11y";
+import fs from "fs";
+import path from "path";
+import Option from "../Model/Option";
+import Args from "../Model/Args";
+import Progress from "../Model/Progress";
+import HtmlRepository from "../Repository/HtmlRepository";
+import Url from "../Model/Url";
 
-class Pa11yRepository {
-    /**
-     * @param option {Option}
-     * @param args {Args}
-     */
-    constructor(option, args) {
-        /**
-         * @type {Option}
-         */
+export default class Pa11yRepository {
+    option: Option;
+    args: Args;
+    currentUrl: Url;
+    folder: string;
+
+    constructor(option: Option, args: Args) {
         this.option = option;
         this.args = args;
-        /**
-         * @type {Url}
-         */
-        this.currentUrl = null;
     }
 
     /**
      * Test a bunch of urls.
-     * @param urlsToGet {Array.<Url>}
-     * @param started {function}
-     * @param updated  {function}
-     * @return {Progress}
      */
-    async test(urlsToGet, started = (progress) => {}, updated = (progress) => {}) {
+    async test(urlsToGet: Url[], started: (progress: Progress) => void, updated: (progress: Progress) => void) {
         this.createFolder();
         let htmlRepository = new HtmlRepository(this.args.getProjectPath());
         let urls = urlsToGet.filter(url => {
@@ -44,14 +37,13 @@ class Pa11yRepository {
         started(progress);
         for (let url of urls) {
             let scanLocation = htmlRepository.file(url);
-            if(this.args.remote) {
+            if (this.args.remote) {
                 scanLocation = url.url + url.fragment;
             }
-            // noinspection JSUnusedGlobalSymbols
             this.currentUrl = url;
             const results = await pa11y(scanLocation, this.option.a11y);
             const jsonFile = path.join(this.folder, url.name + '.json');
-            await fs.writeFile(jsonFile, JSON.stringify(results), (err) => {});
+            await fs.writeFileSync(jsonFile, JSON.stringify(results));
             url.tested = true;
             progress.update(url);
             updated(progress);
@@ -69,5 +61,3 @@ class Pa11yRepository {
         }
     }
 }
-
-module.exports = Pa11yRepository;

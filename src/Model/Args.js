@@ -1,46 +1,44 @@
-const FileDetails = require('./FileDetails');
-const path = require('path');
-const fs = require('fs');
+// @flow
+import FileDetails from "./FileDetails";
+import path from "path";
+import fs from "fs";
 
-class Args {
-    constructor(params) {
-        /**
-         * Folder where the reports will be generated.
-         * @type FileDetails
-         */
+export default class Args {
+    /**
+     * Folder where the reports will be generated.
+     */
+    output: FileDetails;
+    /**
+     * Domain we will be scanning.
+     */
+    domain: string;
+    /**
+     * Should show lots of output.
+     */
+    verbose: boolean;
+    /**
+     * Use url from index else html from index will be used.
+     * @type {boolean}
+     */
+    remote: boolean;
+    constructor(params: any) {
         this.output = null;
-        /**
-         * Domain we will be scanning.
-         * @type {string|*}
-         */
-        this.domain = null;
-        /**
-         * Should show lots of output.
-         * @type {boolean}
-         */
         this.verbose = false;
-        /**
-         * Use url from index else html from index will be used.
-         * @type {boolean}
-         */
         this.remote = false;
-
         Object.assign(this, params);
     }
 
     /**
      * Should show the help menu?
-     * @return {boolean}
      */
-    shouldShowHelp() {
+    shouldShowHelp(): boolean {
         return this.hasOwnProperty('help') || !this.domain || !this.output;
     }
 
     /**
      * Get the site name for the slug of the domain.
-     * @return {string}
      */
-    getSiteName() {
+    getSiteName(): string {
         return this.domain.replace(/[.]/g, '_');
     }
 
@@ -57,5 +55,3 @@ class Args {
         return projectPath;
     }
 }
-
-module.exports = Args;
