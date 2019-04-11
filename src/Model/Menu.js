@@ -1,6 +1,11 @@
-const FileDetails = require('./FileDetails');
+// @flow
+import FileDetails from './FileDetails';
 
-module.exports = [
+const getFileDetails = (filename: string): FileDetails => {
+    return new FileDetails(filename);
+};
+
+export default [
     {
         header: 'Site A11y',
         content: 'Generates accessibility reports for a domain.'
@@ -16,7 +21,7 @@ module.exports = [
             },
             {
                 name: 'output',
-                type: filename => new FileDetails(filename),
+                type: getFileDetails,
                 typeLabel: '[underline]{file}',
                 description: '(Required) Folder to output the reports to.'
             },
