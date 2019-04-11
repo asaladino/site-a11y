@@ -1,14 +1,15 @@
-const winston = require('winston');
-const Args = require('../Model/Args');
-const path = require("path");
-const fs = require("fs");
+// @flow
+import winston from "winston";
+import Args from "../Model/Args";
+import path from "path";
+import fs from "fs";
 
-class Logger {
+export default class Logger {
+    args: Args;
+    logsPath: string;
+    logger: any;
 
-    /**
-     * @param {Args} args
-     */
-    constructor(args) {
+    constructor(args: Args) {
         this.args = args;
         this.logsPath = this.getLogsPath();
         this.logger = winston.createLogger({
@@ -20,7 +21,7 @@ class Logger {
         });
     }
 
-    save(state) {
+    save(state: any): Promise<any> {
         return new Promise((resolve) => {
             let file = path.join(this.logsPath, 'state.json');
             fs.writeFileSync(file, JSON.stringify(state));
@@ -28,17 +29,16 @@ class Logger {
         });
     }
 
-    info(state) {
+    info(state: any) {
         this.logger.log('info', JSON.stringify(state));
     }
 
-    report(state) {
+    report(state: any) {
         this.save(state);
         this.info(state);
     }
 
-
-    getLogsPath() {
+    getLogsPath(): string {
         let logsPathBase = path.join(this.args.getProjectPath(), 'logs');
         if (!fs.existsSync(logsPathBase)) {
             fs.mkdirSync(logsPathBase);
@@ -52,5 +52,3 @@ class Logger {
     }
 
 }
-
-module.exports = Logger;

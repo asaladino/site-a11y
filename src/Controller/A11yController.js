@@ -1,14 +1,23 @@
-const OptionsRepository = require('../Repository/OptionsRepository');
-const UrlsRepository = require('../Repository/UrlsRepository');
-const Pa11yRepository = require('../Repository/Pa11yRepository');
+// @flow
+import OptionsRepository from "../Repository/OptionsRepository";
+import UrlsRepository from "../Repository/UrlsRepository";
+import Pa11yRepository from "../Repository/Pa11yRepository";
+import Logger from "../Utility/Logger";
+import Args from "../Model/Args";
+import Url from "../Model/Url";
 
-class A11yController {
-    constructor(args) {
+export default class A11yController {
+    args: Args;
+    logger: Logger;
+    urls: Url[];
+    pa11yRepository: Pa11yRepository;
+
+    constructor(args: Args) {
         this.args = args;
-        this.logger = new (require('../Utility/Logger'))(args);
+        this.logger = new Logger(args);
     }
 
-    start() {
+    start(): Promise<void> {
         return new Promise((resolve, reject) => {
             this.args.output.doesFolderExist();
             // Load the option.
@@ -26,7 +35,7 @@ class A11yController {
         });
     }
 
-    test(resolve) {
+    test(resolve: function = () => {}) {
         this.pa11yRepository.test(this.urls, progress => {
             this.logger.report(progress.toLog());
             if (this.args.verbose) {
@@ -51,5 +60,3 @@ class A11yController {
         });
     }
 }
-
-module.exports = A11yController;

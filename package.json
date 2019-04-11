@@ -4,7 +4,14 @@
   "description": "Uses pa11y with a login or without. This app works in conjunction with site-index.",
   "main": "site-a11y",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/site-a11y",
+    "build": "babel --minified --verbose src -d lib -s",
+    "watch": "babel --watch --verbose --minified src -d lib -s",
+    "babel": "babel --help",
+    "assets": "",
+    "prepublish": "npm run build",
+    "flow": "flow",
+    "test": "jest"
   },
   "author": "Adam Saladino<adam@codingsimply.com>",
   "license": "MIT",
@@ -15,5 +22,16 @@
     "pa11y": "5.0.3",
     "pa11y-reporter-html": "^1.0.0",
     "truffler": "latest"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.4.3",
+    "@babel/eslint-plugin-development": "^1.0.1",
+    "@babel/preset-env": "^7.4.3",
+    "@babel/preset-flow": "^7.0.0",
+    "chardet": "^0.7.0",
+    "circular-json": "^0.5.9",
+    "flow-bin": "^0.91.0",
+    "jest": "^24.0.0"
   }
 }

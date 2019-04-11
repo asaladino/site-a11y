@@ -1,7 +1,7 @@
-class Option {
-    constructor(option) {
+// @flow
+
+export default class Option {
+    constructor(option: any) {
         Object.assign(this, option);
     }
 }
-
-module.exports = Option;
