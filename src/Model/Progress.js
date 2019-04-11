@@ -11,7 +11,7 @@ type ProgressLog = {
  * Class for reporting the progress.
  */
 export default class Progress {
-    url: Url;
+    url: ?Url;
     total: number;
     progress: number;
 
@@ -20,7 +20,7 @@ export default class Progress {
      * @param url {Url|null} current url
      * @param total {number} total urls to process.
      */
-    constructor(url: Url, total: number = 0) {
+    constructor(url: ?Url, total: number = 0) {
         this.url = url;
         this.total = total;
         this.progress = 0;

@@ -5,7 +5,9 @@ import Pa11yRepository from "../Repository/Pa11yRepository";
 import Logger from "../Utility/Logger";
 import Args from "../Model/Args";
 import Url from "../Model/Url";
+import Progress from "../Model/Progress";
 
+// noinspection JSUnusedGlobalSymbols
 export default class A11yController {
     args: Args;
     logger: Logger;
@@ -17,7 +19,7 @@ export default class A11yController {
         this.logger = new Logger(args);
     }
 
-    start(): Promise<void> {
+    start(callback: function = (event, progress) => {}): Promise<void> {
         return new Promise((resolve, reject) => {
             this.args.output.doesFolderExist();
             // Load the option.
@@ -31,26 +33,32 @@ export default class A11yController {
             // Run tests.
             this.pa11yRepository = new Pa11yRepository(option, this.args);
 
-            this.test(resolve);
+            this.test(callback, resolve);
         });
     }
 
-    test(resolve: function = () => {}) {
-        this.pa11yRepository.test(this.urls, progress => {
+    test(callback: function = (event, progress) => {}, resolve: function = () => {}) {
+        this.pa11yRepository.test(this.urls, (progress: Progress) => {
+            callback('start', progress);
             this.logger.report(progress.toLog());
             if (this.args.verbose) {
                 console.log(progress.toString());
             }
-        }, progress => {
+        }, (progress: Progress) => {
+            callback('progress', progress);
             this.logger.report(progress.toLog());
             if (this.args.verbose) {
                 console.log(progress.toString());
             }
-        }).then(progress => {
+        }).then((progress: Progress) => {
+            callback('complete', progress);
             this.logger.report(progress.toLog());
-            console.log(progress.toString());
+            if (this.args.verbose) {
+                console.log(progress.toString());
+            }
             resolve();
         }).catch(exception => {
+            callback('exception', exception);
             this.pa11yRepository.currentUrl.addError();
             this.logger.report(exception);
             if (this.args.verbose) {

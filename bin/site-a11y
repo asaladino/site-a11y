@@ -2,10 +2,10 @@
 const commandLineArgs = require('command-line-args');
 const getUsage = require('command-line-usage');
 
-const menu = require('./src/Model/Menu');
-const Args = require('./src/Model/Args');
+const menu = require('../lib/Model/Menu').default;
+const Args = require('../lib/Model/Args').default;
 
-const A11yController = require('./src/Controller/A11yController');
+const A11yController = require('../lib/Controller/A11yController').default;
 
 let args = new Args(commandLineArgs(menu[1]['optionList']));
 
