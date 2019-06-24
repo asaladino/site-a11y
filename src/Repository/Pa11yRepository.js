@@ -38,7 +38,8 @@ export default class Pa11yRepository {
         for (let url of urls) {
             let scanLocation = htmlRepository.file(url);
             if (this.args.remote) {
-                scanLocation = url.url + url.fragment;
+                let {fragment} = url;
+                scanLocation = url.url + (fragment ? fragment : '');
             }
             this.currentUrl = url;
             const results = await pa11y(scanLocation, this.option.a11y);
